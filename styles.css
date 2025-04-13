@@ -154,6 +154,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+  position: relative;
+  perspective: 1000px;
 }
 
 .project-card {
@@ -166,13 +168,19 @@ h2 {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 1;
+  transform: translateZ(0);
+  will-change: transform;
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
 
 .project-card:hover {
   background: rgba(0, 0, 0, 0.6);
-  transform: translateY(-5px);
+  transform: translateY(-5px) scale(1.02) rotateX(5deg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border: 2px solid transparent;
+  animation: borderGlow 2s ease-in-out infinite;
 }
 
 .project-card .social-btn {
@@ -194,6 +202,12 @@ h2 {
   font-weight: 300;
   margin-bottom: 1rem;
   letter-spacing: 2px;
+  transition: all 0.3s ease;
+}
+
+.project-card:hover h3 {
+  animation: glow 2s ease-in-out infinite;
+  transform: translateY(-2px);
 }
 
 .project-card p {
@@ -388,6 +402,8 @@ button:hover~.cursor-dot-outline {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  perspective: 1000px;
 }
 
 .achievement-card {
@@ -398,13 +414,40 @@ button:hover~.cursor-dot-outline {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 1;
+  transform: translateZ(0);
+  will-change: transform;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  position: relative;
 }
 
 .achievement-card:hover {
   background: rgba(0, 0, 0, 0.6);
-  transform: translateY(-5px);
+  transform: translateY(-5px) scale(1.02) rotateX(5deg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border: 2px solid transparent;
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+/* Add reflection effect to achievement cards */
+.achievement-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.achievement-card:hover::before {
+  opacity: 1;
 }
 
 .achievement-card h3 {
@@ -412,6 +455,12 @@ button:hover~.cursor-dot-outline {
   font-weight: 300;
   margin-bottom: 1rem;
   letter-spacing: 2px;
+  transition: all 0.3s ease;
+}
+
+.achievement-card:hover h3 {
+  animation: glow 2s ease-in-out infinite;
+  transform: translateY(-2px);
 }
 
 .achievement-card p {
@@ -505,4 +554,39 @@ button:hover~.cursor-dot-outline {
   .ap-scores span {
     text-align: center;
   }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
+  }
+
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes borderGlow {
+  0% {
+    border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3)) 1;
+  }
+
+  50% {
+    border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) 1;
+  }
+
+  100% {
+    border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3)) 1;
+  }
+}
+
+/* Add parallax container */
+.parallax-wrapper {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
 }

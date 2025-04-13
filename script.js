@@ -352,4 +352,53 @@ toggleTimerBtn.addEventListener('click', () => {
 });
 
 // Initialize the game when the page loads
-document.addEventListener('DOMContentLoaded', initGame); 
+document.addEventListener('DOMContentLoaded', initGame);
+
+// Parallax scroll effect
+const cards = document.querySelectorAll('.project-card, .achievement-card');
+let scrollPosition = window.pageYOffset;
+
+function parallaxScroll() {
+  const currentScroll = window.pageYOffset;
+  const scrollDiff = currentScroll - scrollPosition;
+
+  cards.forEach((card, index) => {
+    const speed = 0.05 + (index * 0.01); // Different speed for each card
+    const rect = card.getBoundingClientRect();
+    const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+    if (isInView) {
+      const yPos = parseFloat(getComputedStyle(card).transform.split(',')[5]) || 0;
+      const newY = Math.max(-50, Math.min(50, yPos - (scrollDiff * speed)));
+      const scale = 1 - Math.abs(newY) / 1000;
+      const rotation = newY / 50; // Subtle rotation based on scroll
+
+      card.style.transform = `translate3d(0, ${newY}px, 0) scale(${scale}) rotateX(${rotation}deg)`;
+    }
+  });
+
+  scrollPosition = currentScroll;
+  requestAnimationFrame(parallaxScroll);
+}
+
+// Initialize parallax effect
+window.addEventListener('load', () => {
+  requestAnimationFrame(parallaxScroll);
+});
+
+// Optimize performance by using passive scroll listener
+window.addEventListener('scroll', () => {
+  requestAnimationFrame(parallaxScroll);
+}, { passive: true });
+
+// Reset card positions when window is resized
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    cards.forEach(card => {
+      card.style.transform = 'translate3d(0, 0, 0) scale(1) rotateX(0deg)';
+    });
+    scrollPosition = window.pageYOffset;
+  }, 100);
+}); 
