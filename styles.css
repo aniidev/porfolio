@@ -591,3 +591,14 @@ button:hover~.cursor-dot-outline {
   overflow: hidden;
   transform-style: preserve-3d;
 }
+
+canvas {
+  display: block;
+  z-index: -10;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 600px;
+}

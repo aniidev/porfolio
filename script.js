@@ -1,9 +1,9 @@
-// Matrix Rain Effect
+
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 document.body.appendChild(canvas);
 
-// Style the canvas to cover the whole background
+
 canvas.style.position = 'fixed';
 canvas.style.top = '0';
 canvas.style.left = '0';
@@ -12,7 +12,7 @@ canvas.style.height = '100%';
 canvas.style.zIndex = '-1';
 canvas.style.backgroundColor = '#000';
 
-// Set actual canvas size
+
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -20,23 +20,22 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-// Matrix rain configuration
 const fontSize = 14;
 const columns = Math.floor(canvas.width / fontSize);
 const drops = new Array(columns).fill(1);
 const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-let frameCount = 0;  // Add frame counter for controlling speed
+let frameCount = 0;  
 
-// Animation function
+
 function drawMatrixRain() {
-  // Only update positions every 4 frames
+
   frameCount++;
   const shouldUpdate = frameCount % 4 === 0;
 
   ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = '#FFFFFF';  // Changed to white
+  ctx.fillStyle = '#FFFFFF';  
   ctx.font = fontSize + 'px monospace';
 
   for (let i = 0; i < drops.length; i++) {
@@ -59,62 +58,15 @@ function animate() {
 }
 animate();
 
-// Game state
-let currentStreak = 0;
-let timerActive = false;
-let startTime;
-let timerInterval;
-let currentWordPair = 0;
 
-// Word pairs and their possible bridge words
-const wordPairs = [
-  {
-    word1: 'Pine',
-    word2: 'Apple',
-    bridges: ['Tree', 'Cone', 'Needle']
-  },
-  {
-    word1: 'Light',
-    word2: 'Snow',
-    bridges: ['White', 'House', 'Flake']
-  },
-  {
-    word1: 'Book',
-    word2: 'Shelf',
-    bridges: ['Case', 'End', 'Store']
-  },
-  {
-    word1: 'Coffee',
-    word2: 'Cup',
-    bridges: ['Mug', 'Table', 'Holder']
-  },
-  {
-    word1: 'Rain',
-    word2: 'Bow',
-    bridges: ['Bow', 'Drop', 'Cloud']
-  }
-];
-
-// DOM elements
-const word1Element = document.getElementById('word1');
-const word2Element = document.getElementById('word2');
-const bridgeInput = document.getElementById('bridgeWord');
-const submitBtn = document.getElementById('submitBtn');
-const newGameBtn = document.getElementById('newGameBtn');
-const toggleTimerBtn = document.getElementById('toggleTimerBtn');
-const streakElement = document.getElementById('streak');
-const timerElement = document.getElementById('timer');
-const feedbackElement = document.getElementById('feedback');
 
 // Cursor and Magnetic Text Effect
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorOutline = document.querySelector('.cursor-dot-outline');
 
-// Add magnetic effect only to the name
 const nameElement = document.querySelector('h1');
 if (nameElement) {
   nameElement.classList.add('magnetic-text');
-  // Split text into spans for individual letter animation
   nameElement.innerHTML = nameElement.textContent.split('').map(char =>
     char === ' ' ? ' ' : `<span class="text-distort">${char}</span>`
   ).join('');
@@ -129,9 +81,8 @@ const endY = window.innerHeight / 2;
 let mouseX = endX;
 let mouseY = endY;
 
-// Magnetic effect parameters
-const magneticPower = 0.6; // Increased strength for more noticeable effect on name
-const magneticRadius = 300; // Increased radius for the name
+const magneticPower = 0.6; 
+const magneticRadius = 300; 
 
 function toggleCursorVisibility() {
   if (!cursorVisible) {
@@ -262,100 +213,6 @@ function updateCursor() {
 
 updateCursor();
 
-// Initialize game
-function initGame() {
-  currentStreak = 0;
-  currentWordPair = 0;
-  updateStreak();
-  displayCurrentWordPair();
-  resetTimer();
-  feedbackElement.textContent = '';
-  bridgeInput.value = '';
-}
-
-// Display current word pair
-function displayCurrentWordPair() {
-  word1Element.textContent = wordPairs[currentWordPair].word1;
-  word2Element.textContent = wordPairs[currentWordPair].word2;
-}
-
-// Check if the bridge word is valid
-function isValidBridge(bridgeWord) {
-  return wordPairs[currentWordPair].bridges.some(
-    bridge => bridge.toLowerCase() === bridgeWord.toLowerCase()
-  );
-}
-
-// Update streak display
-function updateStreak() {
-  streakElement.textContent = currentStreak;
-}
-
-// Timer functions
-function startTimer() {
-  startTime = Date.now();
-  timerInterval = setInterval(updateTimer, 1000);
-}
-
-function stopTimer() {
-  clearInterval(timerInterval);
-}
-
-function resetTimer() {
-  stopTimer();
-  timerElement.textContent = '00:00';
-}
-
-function updateTimer() {
-  const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-  const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
-  const seconds = (elapsedTime % 60).toString().padStart(2, '0');
-  timerElement.textContent = `${minutes}:${seconds}`;
-}
-
-// Event listeners
-submitBtn.addEventListener('click', () => {
-  const bridgeWord = bridgeInput.value.trim();
-  if (!bridgeWord) {
-    feedbackElement.textContent = 'Please enter a bridge word';
-    return;
-  }
-
-  if (isValidBridge(bridgeWord)) {
-    feedbackElement.textContent = 'Correct!';
-    currentStreak++;
-    updateStreak();
-
-    // Move to next word pair
-    currentWordPair = (currentWordPair + 1) % wordPairs.length;
-    setTimeout(() => {
-      displayCurrentWordPair();
-      bridgeInput.value = '';
-      feedbackElement.textContent = '';
-    }, 1500);
-  } else {
-    feedbackElement.textContent = 'Try again!';
-    currentStreak = 0;
-    updateStreak();
-  }
-});
-
-newGameBtn.addEventListener('click', initGame);
-
-toggleTimerBtn.addEventListener('click', () => {
-  timerActive = !timerActive;
-  if (timerActive) {
-    startTimer();
-  } else {
-    stopTimer();
-  }
-});
-
-// Initialize the game when the page loads
-document.addEventListener('DOMContentLoaded', initGame);
-
-// Parallax scroll effect
-const cards = document.querySelectorAll('.project-card, .achievement-card');
 let scrollPosition = window.pageYOffset;
 
 function parallaxScroll() {
@@ -390,15 +247,3 @@ window.addEventListener('load', () => {
 window.addEventListener('scroll', () => {
   requestAnimationFrame(parallaxScroll);
 }, { passive: true });
-
-// Reset card positions when window is resized
-let resizeTimeout;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    cards.forEach(card => {
-      card.style.transform = 'translate3d(0, 0, 0) scale(1) rotateX(0deg)';
-    });
-    scrollPosition = window.pageYOffset;
-  }, 100);
-}); 
