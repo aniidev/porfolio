@@ -1,5 +1,5 @@
 
-const canvas = document.createElement('canvas');
+const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d');
 document.body.appendChild(canvas);
 
@@ -8,7 +8,7 @@ canvas.style.position = 'fixed';
 canvas.style.top = '0';
 canvas.style.left = '0';
 canvas.style.width = '100%';
-canvas.style.height = '100%';
+canvas.style.height = '400';
 canvas.style.zIndex = '-1';
 canvas.style.backgroundColor = '#000';
 
@@ -219,20 +219,20 @@ function parallaxScroll() {
   const currentScroll = window.pageYOffset;
   const scrollDiff = currentScroll - scrollPosition;
 
-  cards.forEach((card, index) => {
-    const speed = 0.05 + (index * 0.01); // Different speed for each card
-    const rect = card.getBoundingClientRect();
-    const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+  // cards.forEach((card, index) => {
+  //   const speed = 0.05 + (index * 0.01); // Different speed for each card
+  //   const rect = card.getBoundingClientRect();
+  //   const isInView = rect.top < window.innerHeight && rect.bottom > 0;
 
-    if (isInView) {
-      const yPos = parseFloat(getComputedStyle(card).transform.split(',')[5]) || 0;
-      const newY = Math.max(-50, Math.min(50, yPos - (scrollDiff * speed)));
-      const scale = 1 - Math.abs(newY) / 1000;
-      const rotation = newY / 50; // Subtle rotation based on scroll
+  //   if (isInView) {
+  //     const yPos = parseFloat(getComputedStyle(card).transform.split(',')[5]) || 0;
+  //     const newY = Math.max(-50, Math.min(50, yPos - (scrollDiff * speed)));
+  //     const scale = 1 - Math.abs(newY) / 1000;
+  //     const rotation = newY / 50; // Subtle rotation based on scroll
 
-      card.style.transform = `translate3d(0, ${newY}px, 0) scale(${scale}) rotateX(${rotation}deg)`;
-    }
-  });
+  //     card.style.transform = `translate3d(0, ${newY}px, 0) scale(${scale}) rotateX(${rotation}deg)`;
+  //   }
+  // });
 
   scrollPosition = currentScroll;
   requestAnimationFrame(parallaxScroll);

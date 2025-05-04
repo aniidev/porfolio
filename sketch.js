@@ -1,6 +1,8 @@
+let angle = 0;
+let canvas3D;
 function setup() {
-    createCanvas(350, 350, WEBGL)
-    cnv.style('z-index', '0');
+  canvas3D = createCanvas(window.innerWidth, window.innerHeight, WEBGL);
+    canvas3D.id('p5-canvas')
   }
   
   function draw() {
@@ -8,9 +10,15 @@ function setup() {
 
     let xAxis = [0, 1, 0];
     let yAxis = [1, 0, 0];
-    rotate(map(mouseX, 0, 1000, 0, 2 * PI), xAxis);
-    rotate(map(mouseY, 0, 1000, 0, 2 * PI), yAxis);
+    let zAxis = [0, 0, 1];
+    rotate(angle * PI, xAxis);
+    rotate(-angle * PI, yAxis);
     stroke("white")
-    fill(40, 50)
+    fill(25, 50)
+    angle += 0.0015;
     box(200, 200);
+  }
+
+  function windowResized() {
+    resizeCanvas(window.innerWidth, window.innerHeight);
   }

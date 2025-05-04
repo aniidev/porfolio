@@ -593,12 +593,25 @@ button:hover~.cursor-dot-outline {
 }
 
 canvas {
+  
+  
+}
+#matrix-canvas {
+  z-index: -2;
+}
+
+#p5-canvas {
   display: block;
-  z-index: -10;
+  z-index: -1;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 800px;
   height: 600px;
+  pointer-events: none;
+}
+
+canvas {
+  pointer-events: none;
 }
